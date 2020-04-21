@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Router\Domain;
+namespace Router\Infrastructure;
 
 
 class RouteCollection

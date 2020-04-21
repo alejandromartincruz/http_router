@@ -4,7 +4,7 @@
 namespace Router\Application;
 
 
-use Router\Domain\RouteCollection;
+use Router\Infrastructure\RouteCollection;
 
 class MatchRouteUseCase
 {
