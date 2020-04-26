@@ -16,8 +16,7 @@ class Router
         $match = $result['match'];
         $args = $result['args'];
         if ($match) {
-            return call_user_func_array($method, array());
-            // return;
+            return call_user_func_array($method, $args);
         }
 
         throw new \Exception("$route - Route not found: Error 404");

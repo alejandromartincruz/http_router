@@ -10,9 +10,9 @@ use Router\Domain\Router;
 
 $router = new Router();
 
-$router->get('/post/5/', function() {
+$router->get('/post/67/', function($args) {
     return <<<HTML
-  <h1>Post 5</h1>
+  <h1>Post $args</h1>
 HTML;
 });
 

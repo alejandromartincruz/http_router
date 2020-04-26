@@ -24,14 +24,22 @@ class RouterTest extends TestCase
     {
         $this->expectException(\Exception::class);
 
-        $this->router->get('/noexiste', function() { return "texto";});
+        $this->router->get('/noexiste', function( $args = [] ) { return "texto";});
     }
 
     /** @test */
     public function existingRouteReturnsKnownString()
     {
 
-        $this->assertEquals($this->router->get('/post', function() { return "texto";}), "texto");
+        $this->assertEquals($this->router->get('/post', function( $args = [] ) { return "texto";}), "texto");
 
+    }
+
+    /** @test */
+    public function existingRouteWithOneArgumentReturnsKnownString()
+    {
+
+        $this->assertEquals($this->router->get('/post/5/', function( $args = [] ) { return $args;}), 5);
+        // $this->assertCount(1, $this->router->get('/post/5/', function( $args = [] ) { return $args; }));
     }
 }
