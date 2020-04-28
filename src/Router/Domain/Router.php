@@ -4,42 +4,25 @@ namespace Router\Domain;
 
 class Router
 {
-    const ROUTE_COLLECTION = array(
-            '/',
-            '/post/{id}/',
-            '/post/'
-        );
 
-    public function get($route, $method)
+    private $available_routes;
+
+    public function __construct(array $available_routes)
     {
-        $result = $this->match($route);
-        $match = $result['match'];
-        $args = $result['args'];
-        if ($match) {
-            return call_user_func_array($method, $args);
-        }
-
-        throw new \Exception("$route - Route not found: Error 404");
+        $this->available_routes = $available_routes;
     }
 
-    public function match(string $requestedRoute): array
-    {
-        $routes = self::ROUTE_COLLECTION;
 
-        foreach ($routes as $route) {
+    public function routeMatch(string $requestedRoute): bool
+    {
+
+        foreach ($this->available_routes as $route) {
             if ($this->isMatch($requestedRoute, $route)) {
-                $args = $this->extractVariable($requestedRoute, $route);
-                return array(
-                    "match" => true,
-                    "args"  => $args
-                );
+                return true;
             }
         }
 
-        return array(
-            "match" => false,
-            "args"  => []
-        );
+        throw new \Exception("$route - Route not found: Error 404");
 
     }
 
@@ -63,8 +46,19 @@ class Router
         return false;
     }
 
-    public function extractVariable($uri, $regexUri): array
+    public function extractVariables(string $requestedRoute): array
     {
+        foreach ($this->available_routes as $route) {
+            if ($this->isMatch($requestedRoute, $route)) {
+                $regexUri = $route;
+                break;
+            }
+        }
+
+        if (!isset($regexUri)) {
+            throw new \Exception("$requestedRoute - Route not found: Error 404");
+        }
+
         $params = [];
         preg_match_all('\'' . '{(\w+)}' . '\'', $regexUri, $matches);
 
@@ -80,7 +74,7 @@ class Router
 
         $regexUri .= '$';
         $regexUri = '%^' . $regexUri . '%';
-        $res = preg_match($regexUri, $uri, $params);
+        $res = preg_match($regexUri, $requestedRoute, $params);
 
         if (!$res || $res == 0 )
         {
