@@ -75,4 +75,13 @@ class RouterTest extends TestCase
 
     }
 
+    /** @test */
+    public function routeWithOneParamWithoutLastBackslashReturnsEmptyArray()
+    {
+
+        $this->assertIsArray($this->router->extractVariables('/post/5'));
+        $this->assertCount(0, $this->router->extractVariables('/post/5'));
+
+    }
+
 }
